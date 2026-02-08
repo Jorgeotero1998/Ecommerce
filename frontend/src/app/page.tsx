@@ -35,12 +35,13 @@ export default function Home() {
       try {
         const res = await fetch("http://localhost:3001/products");
         const data = await res.json();
-        setProducts(data.map((p: any) => ({ ...p, stock: p.stock ?? 10 })));
-      } catch (err) { console.error("Sync Error"); }
+        setProducts(data.map((p: any) => ({ 
+          ...p, 
+          images: Array.isArray(p.images) ? p.images : [p.images || "https://via.placeholder.com/500"]
+        })));
+      } catch (err) { console.error("DB_OFFLINE"); }
     };
     loadData();
-    const saved = localStorage.getItem("ind_store_pro");
-    if (saved) setCart(JSON.parse(saved));
   }, []);
 
   useEffect(() => { if (mounted) localStorage.setItem("ind_store_pro", JSON.stringify(cart)); }, [cart, mounted]);
